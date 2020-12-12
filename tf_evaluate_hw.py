@@ -82,7 +82,7 @@ def plot_eval_details(data_dict, sample, save_dir, save_name):
 
     return plot_data
 
-
+ 
 def do_evaluation(config, qualitative_analysis=True, quantitative_analysis=True, verbose=0):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 

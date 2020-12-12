@@ -1,8 +1,11 @@
 import numpy as np
 import cv2
 import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import ffmpeg
 import svgwrite
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 
 
 def draw_stroke_cv2(strokes_abs, size=(120,1200), margin=(10,20), pen_width=4, factor=1, output_path=None):
@@ -35,6 +38,7 @@ def draw_stroke_cv2(strokes_abs, size=(120,1200), margin=(10,20), pen_width=4, f
         factor_h = size[0]-2*margin[0]
 
     image = np.zeros((height, width, 1), np.uint8)
+    mat_img = np.zeros((height, width, 1), np.uint8)
     image[:, :] = 255
 
     new_line = False
@@ -102,7 +106,6 @@ def draw_stroke_svg(data, factor=0.01, svg_filename='sample.svg', color_labels=N
 
     dwg = svgwrite.Drawing(svg_filename, size=dims)
     dwg.add(dwg.rect(insert=(0, 0), size=dims, fill='white'))
-
     abs_x = 25 - min_x
     abs_y = 25 - min_y
 
@@ -114,6 +117,9 @@ def draw_stroke_svg(data, factor=0.01, svg_filename='sample.svg', color_labels=N
     prev_color_label = color_labels[0]
     color = svgwrite.rgb(0, 0, 0)
 
+    plt_img = np.zeros((int(dims[0]), int(dims[1])))
+    fig = plt.figure()
+    img_list = []
     for idx in range(data.shape[0]):
         prev_x = abs_x
         prev_y = abs_y
@@ -123,6 +129,9 @@ def draw_stroke_svg(data, factor=0.01, svg_filename='sample.svg', color_labels=N
 
         abs_x += x
         abs_y += y
+        plt_img[int(abs_x)][int(abs_y)] = 1
+        # print("img = ",plt_img.shape)
+        img_list.append([plt.imshow(plt_img, animated = True)])
 
         if lift_pen == 1:
             p = "M " + str(abs_x) + "," + str(abs_y) + " "
@@ -139,6 +148,10 @@ def draw_stroke_svg(data, factor=0.01, svg_filename='sample.svg', color_labels=N
 
         dwg.add(dwg.path(p).stroke(color, stroke_width).fill(color))
 
+    ani = animation.ArtistAnimation(fig, img_list, interval=50, blit=True,
+                                repeat_delay=1000)
+    plt.show()
+    ani.save('sample.gif')
     dwg.save()
     return dwg
 
@@ -154,6 +167,7 @@ def visualize_sample(args):
         _, stroke_sample, valid_stroke_target = dataset.fetch_sample(sample_id)
         # Prepare the sample and its reconstruction for visualization.
         sample = dataset.undo_normalization(stroke_sample[0])
+
         svg_path = os.path.join(args.out_dir, "real_" + str(sample_id) + '.svg')
         draw_stroke_svg(sample, factor=factor, svg_filename=svg_path)
 

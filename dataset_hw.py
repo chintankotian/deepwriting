@@ -232,7 +232,7 @@ class HandWritingDataset(BaseDataset):
         else:
             return None
 
-
+ 
 class HandWritingDatasetConditional(HandWritingDataset):
     """
     Uses character labels.

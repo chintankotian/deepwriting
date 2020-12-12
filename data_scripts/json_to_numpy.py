@@ -100,7 +100,7 @@ def fetch_sample_from_dict(container, json_data, rescale_canvas=False, binarize_
         bow_labels[word['ranges'][0][0]] = 1
 
         if word['recognition_is_correct'] is not True:
-            num_mislabeled_words += 1
+            num_mislabeled_words += 1   
 
         for pc in range(len(word['chars'])):
             char = word['chars'][pc]
