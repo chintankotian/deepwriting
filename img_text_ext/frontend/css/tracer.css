@@ -1,0 +1,23 @@
+#canvasDiv
+    {
+        background-color: beige;
+        width: 50vw;
+        height: 100vh; 
+        margin:0 auto;
+    }
+
+
+#tracerCanvas
+    {
+        border: 1px solid #333; 
+        /* width: 80%;  */
+        /* background-image:url('../../binarized_img/0.png'); 
+        background-repeat:no-repeat; 
+        background-size: 100% 100%; */
+    }
+
+
+#canvasImg
+    {
+        width: 100%;
+    }
