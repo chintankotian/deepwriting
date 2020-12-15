@@ -7,8 +7,9 @@ window.addEventListener("load", function() {
     canvas.width = canvas.parentElement.clientWidth * 0.8;
     var ctx = canvas.getContext("2d");
     let startPosition = {x: 0, y: 0};
-    let lineCoordinates = {x: 0, y: 0};
+    let lineCoordinates = {x: null, y: null};
     let isDrawStart = false;
+    let strokeStart = false;
 
     ctx.lineWidth = "1";
     ctx.strokeStyle = "red";
@@ -38,28 +39,44 @@ window.addEventListener("load", function() {
         return {x,y} 
     }
 
-    const drawLine = () => {
-
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    var coord = {}
-    coord["x1"] = startPosition.x
-    coord["y1"] = startPosition.y 
-    coord["x2"] = lineCoordinates.x 
-    coord["y2"] = lineCoordinates.y
-
-    lineArray.push(coord)
-    lineArray.forEach(function(data){
-        ctx.beginPath();
-        ctx.moveTo(data["x1"], data["y1"]);
-        ctx.lineTo(data["x2"], data["y2"]);
-        ctx.stroke();
-    })
+    const capturePoint = (event) => {
+        if (lineCoordinates.x != null) {
+            var coord = {}
+            coord["x1"] = startPosition.x
+            coord["y1"] = startPosition.y 
+            coord["x2"] = lineCoordinates.x 
+            coord["y2"] = lineCoordinates.y
+        
+            lineArray.push(coord)
+            console.log("Point captured")
+        }
+        console.log("No of points = " + lineArray.length.toString())
 
     }
 
+    const drawLine = () => {
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        lineArray.forEach(function(data){
+            ctx.beginPath();
+            ctx.moveTo(data["x1"], data["y1"]);
+            ctx.lineTo(data["x2"], data["y2"]);
+            ctx.stroke();
+        })
+            ctx.beginPath();
+            ctx.moveTo(startPosition.x, startPosition.y);
+            ctx.lineTo(lineCoordinates.x, lineCoordinates.y);
+            ctx.stroke();
+    }
+
     const mouseDownListener = (event) => {
-    startPosition = getClientOffset(event);
-    isDrawStart = true;
+        console.log("Mouse down")
+        if (isDrawStart) {
+            capturePoint();
+
+            startPosition = getClientOffset(event)
+        }
     }
 
     const mouseMoveListener = (event) => {
@@ -70,21 +87,36 @@ window.addEventListener("load", function() {
     drawLine();
     }
 
-    const mouseupListener = (event) => {
-    isDrawStart = false;
+    const mouseDblclickListener = (event) => {
+        isDrawStart = !isDrawStart;
+        if (isDrawStart) {
+            startPosition = getClientOffset(event);            
+        }else
+        {
+            // if(lineArray.length != 0)
+            // {
+            //     lineArray.splice
+            // }
+        }
+        capturePoint();
+
     }
+
+    // const mouseupListener = (event) => {
+    // isDrawStart = false;
+    // }
 
     const clearCanvas = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-
+    canvas.addEventListener('dblclick', mouseDblclickListener);
     canvas.addEventListener('mousedown', mouseDownListener);
     canvas.addEventListener('mousemove', mouseMoveListener);
-    canvas.addEventListener('mouseup', mouseupListener);
+    // canvas.addEventListener('mouseup', mouseupListener);
 
     canvas.addEventListener('touchstart', mouseDownListener);
     canvas.addEventListener('touchmove', mouseMoveListener);
-    canvas.addEventListener('touchend', mouseupListener);
+    // canvas.addEventListener('touchend', mouseupListener);
 
     });
     
