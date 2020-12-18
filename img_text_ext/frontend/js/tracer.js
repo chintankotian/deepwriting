@@ -4,33 +4,42 @@ window.addEventListener("load", function() {
     console.log("DOM loaded")
     var img = document.getElementById("canvasImg");
     var canvas = document.getElementById("tracerCanvas")
-    canvas.width = canvas.parentElement.clientWidth * 0.8;
+    canvas.width = canvas.parentElement.clientWidth * 1;
+    canvas.height = canvas.parentElement.clientHeight * 0.8;
     var ctx = canvas.getContext("2d");
-    let startPosition = {x: 0, y: 0};
-    let lineCoordinates = {x: null, y: null};
-    let isDrawStart = false;
-    let strokeStart = false;
+    var startPosition = {x: 0, y: 0};
+    var lineCoordinates = {x: null, y: null};
+    var isDrawStart = false;
+    var strokeLength = canvas.width * 0.05;
+    var lineArray = []
+
 
     ctx.lineWidth = "1";
     ctx.strokeStyle = "red";
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
 
-    // img.onload = start;
+    // ANGLE AND DISTANCE
+    const distance = (event) =>{
+        return Math.sqrt( 
+                            Math.pow((event.x1 - event.x2), 2) + Math.pow((event.y1 - event.y2), 2)
+                        )
+    }
 
-    // function start() {
-    //     console.log("Img loaded")
-    //     /// initial draw of image
-    //     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    
-    //     /// listen to mouse move (or use jQuery on('mousemove') instead)
-    //     // canvas.onmousemove = updateLine;
-    // }
-    
-    var lineArray = []
+    const  angle = (cx, cy, ex, ey) => {
+        var dy = ey - cy;
+        var dx = ex - cx;
+        var theta = Math.atan2(dy, dx); // range (-PI, PI]
+        // theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+        //if (theta < 0) theta = 360 + theta; // range [0, 360)
+        return theta;
+      }
 
-
-
+    const pointFromAngleDis = (event) => {
+        x = event.x + (strokeLength * Math.cos(event.theta))
+        y = event.y + (strokeLength * Math.sin(event.theta))   
+        return {x, y}
+    }
     const getClientOffset = (event) => {
         const {pageX, pageY} = event.touches ? event.touches[0] : event;
         const x = pageX - canvas.offsetLeft;
@@ -39,14 +48,18 @@ window.addEventListener("load", function() {
         return {x,y} 
     }
 
-    const capturePoint = (event) => {
+    const capturePoint = (pen = 0) => {
+        if (pen) {
+            console.log(lineArray)
+        }
         if (lineCoordinates.x != null) {
             var coord = {}
             coord["x1"] = startPosition.x
             coord["y1"] = startPosition.y 
             coord["x2"] = lineCoordinates.x 
             coord["y2"] = lineCoordinates.y
-        
+            coord["pen"] = pen;
+            console.log(coord)
             lineArray.push(coord)
             console.log("Point captured")
         }
@@ -64,9 +77,13 @@ window.addEventListener("load", function() {
             ctx.lineTo(data["x2"], data["y2"]);
             ctx.stroke();
         })
+
+
             ctx.beginPath();
             ctx.moveTo(startPosition.x, startPosition.y);
             ctx.lineTo(lineCoordinates.x, lineCoordinates.y);
+            // console.log("Distance = " + distance({"x1":startPosition.x, "x2":lineCoordinates.x, "y1":startPosition.y, "y2":lineCoordinates.y}))
+            // console.log("Angle = " + angle(startPosition.x, startPosition.y, lineCoordinates.x, lineCoordinates.y))
             ctx.stroke();
     }
 
@@ -75,30 +92,47 @@ window.addEventListener("load", function() {
         if (isDrawStart) {
             capturePoint();
 
-            startPosition = getClientOffset(event)
+            startPosition = lineCoordinates;
         }
     }
 
     const mouseMoveListener = (event) => {
-    if(!isDrawStart) return;
-    
-    lineCoordinates = getClientOffset(event);
-    // clearCanvas();
-    drawLine();
+        if(!isDrawStart) return;
+        
+        lineCoordinates = getClientOffset(event);
+        // clearCanvas();
+        var length = distance({"x1":startPosition.x, "x2":lineCoordinates.x, "y1":startPosition.y, "y2":lineCoordinates.y});
+
+        if(length > strokeLength)
+        {
+
+            var tempData = {"x":startPosition.x, "y":startPosition.y, "theta":angle(startPosition.x, startPosition.y, lineCoordinates.x, lineCoordinates.y)}
+            tempData = pointFromAngleDis(tempData)
+            lineCoordinates.x = tempData.x
+            lineCoordinates.y = tempData.y
+        }
+        drawLine();
     }
 
     const mouseDblclickListener = (event) => {
         isDrawStart = !isDrawStart;
         if (isDrawStart) {
-            startPosition = getClientOffset(event);            
+            startPosition = getClientOffset(event);
+            capturePoint();
         }else
         {
             // if(lineArray.length != 0)
-            // {
-            //     lineArray.splice
+            // {   
+            //     console.log("pop")
+            //     lineArray.pop()
             // }
+
+            // capturePoint(pen = 1);
+            lineArray[lineArray.length - 1].pen = 1;
+            console.log(lineArray)
+            lineCoordinates = {x: null, y: null};
+
         }
-        capturePoint();
 
     }
 
