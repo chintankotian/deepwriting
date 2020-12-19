@@ -9,10 +9,28 @@
 </head>
 <body>
     <div id="canvasDiv">
-        <canvas id = "tracerCanvas"  width="auto" height="auto">
-            <img id="canvasImg" src="../../binarized_img/0.png" alt="">
-        </canvas>
+        <div id = "canvasContainer">
+            <canvas id = "tracerCanvas"  width="auto" height="auto">
+                <img id="canvasImg" src="../../binarized_img/0.png" alt="">
+            </canvas>
+        </div>
 
+        <div id = "charContainer" align = "center">
+            <input type="checkbox" class ="toggleContainer" id = "eocLabel" name = "eoclabel">
+            <label for="eoclabel" class ="toggleContainer"> EOC label</label>
+        </div>
+
+        <div id = "labelContainer" align = "center">
+            <form action="">
+                <fieldset id = "wordContainerForm">
+
+                </fieldset>
+            </form>
+        </div>
+
+        <div align = "center">
+            <button id = "submitButton">Submit</button>
+        </div>
     </div>
     
 </body>

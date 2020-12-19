@@ -21,3 +21,17 @@
     {
         width: 100%;
     }
+
+#canvasContainer
+    {
+        width: 100%;
+        height: 50%;
+        align-items: center;
+        
+    }
+
+#charContainer
+    {
+        /* width: 100%;
+        margin: 0 auto; */
+    }

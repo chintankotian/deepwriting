@@ -5,15 +5,26 @@ window.addEventListener("load", function() {
     var img = document.getElementById("canvasImg");
     var canvas = document.getElementById("tracerCanvas")
     canvas.width = canvas.parentElement.clientWidth * 1;
-    canvas.height = canvas.parentElement.clientHeight * 0.8;
+    canvas.height = canvas.parentElement.clientHeight * 1;
     var ctx = canvas.getContext("2d");
     var startPosition = {x: 0, y: 0};
     var lineCoordinates = {x: null, y: null};
     var isDrawStart = false;
     var strokeLength = canvas.width * 0.05;
     var lineArray = []
+    var wordArray = ["jumped"]
 
+    // Create the word label radio buttons
+    var wordForm = document.getElementById("wordContainerForm")
+    wordArray[0].toLowerCase().split("").forEach(function(char, no){
+        if (!no) {
+            wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" checked name="character" value="'+char+'">'+char+'&nbsp;'
+        }else{
+            wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
+        }
+    })
 
+    // define stroke style and width
     ctx.lineWidth = "1";
     ctx.strokeStyle = "red";
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -59,7 +70,9 @@ window.addEventListener("load", function() {
             coord["x2"] = lineCoordinates.x 
             coord["y2"] = lineCoordinates.y
             coord["pen"] = pen;
-            console.log(coord)
+            // bow_label must be 1 on the first point of the first stroke of a word, if we are creating new instance of bow_label will be 1 for the first entry of lineArray 
+            coord["bow_label"] = 0;
+            if(!lineArray.length) coord["bow_label"] = 1;
             lineArray.push(coord)
             console.log("Point captured")
         }
