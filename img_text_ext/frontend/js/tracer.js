@@ -21,6 +21,7 @@ window.addEventListener("load", function() {
             wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" checked name="character" value="'+char+'">'+char+'&nbsp;'
         }else{
             wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
+
         }
     })
 
@@ -59,10 +60,10 @@ window.addEventListener("load", function() {
         return {x,y} 
     }
 
-    const capturePoint = (pen = 0) => {
-        if (pen) {
-            console.log(lineArray)
-        }
+    const capturePoint = (pen = 0,eoc_label = 0) => {
+        // if (pen) {
+        //     console.log(lineArray)
+        // }
         if (lineCoordinates.x != null) {
             var coord = {}
             coord["x1"] = startPosition.x
@@ -73,6 +74,20 @@ window.addEventListener("load", function() {
             // bow_label must be 1 on the first point of the first stroke of a word, if we are creating new instance of bow_label will be 1 for the first entry of lineArray 
             coord["bow_label"] = 0;
             if(!lineArray.length) coord["bow_label"] = 1;
+            // eoc_label must be 1 on the last point of the last stroke of a character
+            coord["eoc_label"] = eoc_label;
+
+            // character label
+            var char_input = document.querySelectorAll("input[name = 'character']")
+            var char = "";
+            char_input.forEach(function(character, no){
+                if(character.checked)  
+                {
+                    char = character.value
+                    
+                } 
+            })
+            coord["char_label"] = char;
             lineArray.push(coord)
             console.log("Point captured")
         }
@@ -142,6 +157,16 @@ window.addEventListener("load", function() {
 
             // capturePoint(pen = 1);
             lineArray[lineArray.length - 1].pen = 1;
+            var eoc = document.getElementById("eocLabel")
+            if (eoc.checked) 
+            {
+                lineArray[lineArray.length - 1].eoc_label = 1;
+                eoc.checked  = false;
+                let selected_char = document.querySelector("input[name=character][checked]")
+                selected_char.checked = false;
+                selected_char.nextElementSibling.click();
+                console.log(selected_char.nextElementSibling.value)
+            }
             console.log(lineArray)
             lineCoordinates = {x: null, y: null};
 
