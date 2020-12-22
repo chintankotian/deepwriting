@@ -17,13 +17,16 @@ window.addEventListener("load", function() {
     // Create the word label radio buttons
     var wordForm = document.getElementById("wordContainerForm")
     wordArray[0].toLowerCase().split("").forEach(function(char, no){
-        if (!no) {
-            wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" checked name="character" value="'+char+'">'+char+'&nbsp;'
-        }else{
-            wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
+        // if (!no) {
+        //     wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" checked name="character" value="'+char+'">'+char+'&nbsp;'
+        // }else{
+        //     wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
+        // }
+        wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
 
-        }
     })
+
+    document.querySelectorAll("input[name = character]")[0].checked = true;
 
     // define stroke style and width
     ctx.lineWidth = "1";
@@ -149,22 +152,16 @@ window.addEventListener("load", function() {
             capturePoint();
         }else
         {
-            // if(lineArray.length != 0)
-            // {   
-            //     console.log("pop")
-            //     lineArray.pop()
-            // }
-
-            // capturePoint(pen = 1);
+ 
             lineArray[lineArray.length - 1].pen = 1;
             var eoc = document.getElementById("eocLabel")
             if (eoc.checked) 
             {
                 lineArray[lineArray.length - 1].eoc_label = 1;
                 eoc.checked  = false;
-                let selected_char = document.querySelector("input[name=character][checked]")
+                let selected_char = document.querySelector("input[name=character]:checked")
                 selected_char.checked = false;
-                selected_char.nextElementSibling.click();
+                selected_char.nextElementSibling.checked = true;
                 console.log(selected_char.nextElementSibling.value)
             }
             console.log(lineArray)
@@ -174,9 +171,7 @@ window.addEventListener("load", function() {
 
     }
 
-    // const mouseupListener = (event) => {
-    // isDrawStart = false;
-    // }
+
 
     const clearCanvas = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -190,5 +185,21 @@ window.addEventListener("load", function() {
     canvas.addEventListener('touchmove', mouseMoveListener);
     // canvas.addEventListener('touchend', mouseupListener);
 
+
+    $('#submitButton').on("click", function(){
+        $.ajax({
+            url:"http://127.0.0.1:5000/",
+            method:'post',
+            data: JSON.stringify(lineArray),
+            contentType: 'application/json',
+            success:function(){
+                window.location.reload()
+            },
+            error:function(err){
+                console.log(err)
+            }
+        })
+
+    })
     });
     
