@@ -7,8 +7,8 @@ app = Flask(__name__)
 def index():
     if(request.method == "POST"):
         # print(request.json)
-        with open("static/jsons/output.json", "wb") as f:
-            json.dump(request.json, f)
+        with open("static/jsons/output.json", "w") as f:
+            json.dump(request.json, f, indent=6)
         return 'done'
     else:
         return render_template("html/tracer.html")

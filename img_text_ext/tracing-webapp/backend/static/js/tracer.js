@@ -10,7 +10,7 @@ window.addEventListener("load", function() {
     var startPosition = {x: 0, y: 0};
     var lineCoordinates = {x: null, y: null};
     var isDrawStart = false;
-    var strokeLength = canvas.width * 0.05;
+    var strokeLength = canvas.width * 0.03;
     var lineArray = []
     var wordArray = ["jumped"]
 
