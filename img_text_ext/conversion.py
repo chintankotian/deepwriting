@@ -140,25 +140,27 @@ def boundingBox(input_img):
 
 
 def binarizeImage(imgArray):
-    folder_name = "binarized_img"
+    folder_name = "tracing-webapp/backend/static/binarized_img"
     suffix = ".png"
     for no, img in enumerate(imgArray):
         img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         # cv.imshow("gray", img)
         # cv.waitKey(0)
         # cv.destroyAllWindows()
-        th, img = cv.threshold(img, 70, 255, cv.THRESH_BINARY)
+        # th, img = cv.threshold(img, 70, 255, cv.THRESH_BINARY)
 
         # print(th)
         # 117.0
         #cv.imwrite('data/dst/opencv_th_otsu.jpg', im_gray_th_otsu)
         cv.imshow("Binarized", img)
+        cv.waitKey(0) 
         output_name = folder_name+"/"+str(no)+suffix
         cv.imwrite(output_name, img)
+        cv.destroyAllWindows()  
 
 
 if __name__ == "__main__":
-    input_img = "./sketch-black.jpeg"
+    input_img = "input-images/test-ball-5.jpeg"
     cropped_img_array = boundingBox(input_img)
     binarizeImage(cropped_img_array)  
 

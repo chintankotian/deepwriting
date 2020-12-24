@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A very cool app to trace handwriting</title>
-    <script>
-        var url = "{{ url_for('index') }}"
-    </script>
     <script src="{{ url_for('static', filename = 'js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/tracer.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'css/tracer.css') }}">
@@ -16,7 +13,7 @@
     <div id="canvasDiv">
         <div id = "canvasContainer">
             <canvas id = "tracerCanvas"  width="auto" height="auto">
-                <img id="canvasImg" src="{{ url_for('static', filename = 'binarized_img/1.png') }}" alt="">
+                <img id="canvasImg" src="{{ url_for('static', filename = data) }}" alt="">
             </canvas>
         </div>
 
@@ -34,6 +31,7 @@
         </div>
 
         <div align = "center">
+        <input type="text" name="name" id = "jsonName">
             <button id = "submitButton">Submit</button>
         </div>
     </div>

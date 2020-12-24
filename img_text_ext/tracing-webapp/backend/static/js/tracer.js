@@ -188,10 +188,10 @@ window.addEventListener("load", function() {
 
     $('#submitButton').on("click", function(){
         $.ajax({
-            url:"http://127.0.0.1:5000/",
+            url:"http://127.0.0.1:5000/0",
             method:'post',
-            data: JSON.stringify(lineArray),
-            contentType: 'application/json',
+            data:{'data' : JSON.stringify(lineArray), "name" : $('#jsonName').val()},
+            // contentType: 'application/json',
             success:function(){
                 window.location.reload()
             },
