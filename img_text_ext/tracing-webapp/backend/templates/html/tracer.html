@@ -13,7 +13,7 @@
     <div id="canvasDiv">
         <div id = "canvasContainer">
             <canvas id = "tracerCanvas"  width="auto" height="auto">
-                <img id="canvasImg" src="{{ url_for('static', filename = data) }}" alt="">
+                <img id="canvasImg" data-no = "{{ data.no }}" src="{{ url_for('static', filename = data.img) }}" alt="">
             </canvas>
         </div>
 

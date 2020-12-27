@@ -13,7 +13,10 @@ def index(imgNo):
         return 'done'
     else:
         print(imgNo)
-        data = "binarized_img/"+imgNo+".png"
+        data = {
+                'img' : "binarized_img/"+imgNo+".png",
+                "no"  : imgNo
+               }
         return render_template("html/tracer.html", data = data)
 
 if __name__ == "__main__":

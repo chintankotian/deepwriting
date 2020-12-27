@@ -6,24 +6,23 @@ window.addEventListener("load", function() {
     var canvas = document.getElementById("tracerCanvas")
     canvas.width = canvas.parentElement.clientWidth * 1;
     canvas.height = canvas.parentElement.clientHeight * 1;
+
     var ctx = canvas.getContext("2d");
     var startPosition = {x: 0, y: 0};
     var lineCoordinates = {x: null, y: null};
     var isDrawStart = false;
     var strokeLength = canvas.width * 0.03;
     var lineArray = []
-    var wordArray = ["jumped"]
+    var wordArray = ["jumped", "brown", "fox", "quick", "over", "lazy", "dog", "the",  "The",  ]
+    var imgNo = $("#canvasImg").data("no");
+
+
+    $('#jsonName').val(wordArray[imgNo])
 
     // Create the word label radio buttons
     var wordForm = document.getElementById("wordContainerForm")
-    wordArray[0].toLowerCase().split("").forEach(function(char, no){
-        // if (!no) {
-        //     wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" checked name="character" value="'+char+'">'+char+'&nbsp;'
-        // }else{
-        //     wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
-        // }
+    wordArray[imgNo].toLowerCase().split("").forEach(function(char, no){
         wordForm.innerHTML = wordForm.innerHTML + '<input type="radio" name="character" value="'+char+'">'+char+'&nbsp;'
-
     })
 
     document.querySelectorAll("input[name = character]")[0].checked = true;
@@ -113,8 +112,6 @@ window.addEventListener("load", function() {
             ctx.beginPath();
             ctx.moveTo(startPosition.x, startPosition.y);
             ctx.lineTo(lineCoordinates.x, lineCoordinates.y);
-            // console.log("Distance = " + distance({"x1":startPosition.x, "x2":lineCoordinates.x, "y1":startPosition.y, "y2":lineCoordinates.y}))
-            // console.log("Angle = " + angle(startPosition.x, startPosition.y, lineCoordinates.x, lineCoordinates.y))
             ctx.stroke();
     }
 
