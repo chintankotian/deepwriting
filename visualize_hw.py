@@ -147,11 +147,11 @@ def draw_stroke_svg(data, factor=0.01, svg_filename='sample.svg', color_labels=N
         prev_color_label = color_labels[idx]
 
         dwg.add(dwg.path(p).stroke(color, stroke_width).fill(color))
-
-    ani = animation.ArtistAnimation(fig, img_list, interval=50, blit=True,
-                                repeat_delay=1000)
-    plt.show()
-    ani.save('sample.gif')
+    if __name__ == '__main__':
+        ani = animation.ArtistAnimation(fig, img_list, interval=50, blit=True,
+                                    repeat_delay=1000)
+        plt.show()
+    # ani.save('sample.gif')
     dwg.save()
     return dwg
 

@@ -5,8 +5,8 @@ import sys
 import os
 import argparse
 import json
-from scipy.misc import imsave
-
+# from scipy.misc import imsave
+from matplotlib.pyplot import imsave
 from tf_dataset_hw import *
 from tf_models import VRNNGMM
 from tf_models_hw import HandwritingVRNNGmmModel, HandwritingVRNNModel
