@@ -6,6 +6,9 @@ window.addEventListener("load", function() {
     var canvas = document.getElementById("tracerCanvas")
     canvas.width = canvas.parentElement.clientWidth * 1;
     canvas.height = canvas.parentElement.clientHeight * 1;
+    console.log("img width = "+ canvas.width)
+    console.log("img height = "+ canvas.height)
+
 
     var ctx = canvas.getContext("2d");
     var startPosition = {x: 0, y: 0};
