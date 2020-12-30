@@ -120,3 +120,4 @@ data/
 *.bmp
 *.ppm
 ./img_text_ext/tracing-webapp/backend/jsons
+./evaluate/
