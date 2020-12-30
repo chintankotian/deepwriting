@@ -312,7 +312,7 @@ class HandWritingDatasetConditional(HandWritingDataset):
         """
         self.one_hot_char_labels = []
         for idx, label in enumerate(self.data_dict['char_labels']):
-            self.one_hot_char_labels .append(self.one_hot_encoder.transform(np.expand_dims(label, axis=1)))
+            self.one_hot_char_labels.append(self.one_hot_encoder.transform(np.expand_dims(label, axis=1)))
 
     def sample_generator(self):
         """
