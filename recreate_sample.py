@@ -2,6 +2,24 @@ import json
 import os
 import numpy as np
 
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
+alphabet = list("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.,-()/") # %:;&#
+alphabet.insert(0, chr(0)) # '\x00' character, i.e., ord(0) to label concatenations.
+char_encoder = LabelEncoder()
+char_encoder.fit(alphabet)
+
+int_alphabet = np.expand_dims(np.array(range(len(alphabet))), axis=1)
+
+one_hot_encoder = OneHotEncoder(sparse=False)
+one_hot_encoder.fit(int_alphabet)
+
+
+def text_to_one_hot(text):
+    integer_labels = char_encoder.transform(list(text))
+    return one_hot_encoder.transform(np.expand_dims(integer_labels, axis=1))
+
+
 def load_data(json_path):
     # loads tracer data jsons and merges into one array
     data = [] 
@@ -12,11 +30,8 @@ def load_data(json_path):
                 temp = json.load(f)
             
             for sample in temp['data']:
+                pass
                 
-
-            
-
-    pass
 
 def scale(sample):
     # scales the data according to the img sixe  --> x/img_width, y/img_height
