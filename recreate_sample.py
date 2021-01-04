@@ -20,22 +20,43 @@ def text_to_one_hot(text):
     return one_hot_encoder.transform(np.expand_dims(integer_labels, axis=1))
 
 
-def load_data(json_path):
+def load_data(json_path, semantic_len = 300):
     # loads tracer data jsons and merges into one array
-    data = [] 
+    coord_data = np.empty((0,3), "float")
+    label_data = np.empty((0,4), "float")
+    char_one_ht_data = np.empty((0,70), "float")
+    # char_one_ht_data
+
     for files in os.listdir(json_path):
         if files.split('.')[-1] == "json":
             temp_json_path = os.path.join(json_path, files)
+            print("Processing  "+files)
             with open(temp_json_path) as f:
                 temp = json.load(f)
-            
-            for sample in temp['data']:
-                pass
-                
 
-def scale(sample):
+            temp_cood = []
+            temp_label = []
+            temp_char = []
+            for sample in temp['data']:
+                temp_cood.append([sample['x1'], sample['y1'], sample['pen']])
+                temp_label.append([sample['bow_label'], sample['eoc_label'],temp['width'], temp['height']])
+                temp_char.append(text_to_one_hot(sample['char_label'])[0])
+                
+            
+            coord_data = np.append(coord_data,scale(temp_cood, temp['width'], temp['height']), axis = 1)
+            label_data = np.append(label_data,temp_label, axis = 1)
+            char_one_ht_data = np.append(char_one_ht_data,temp_char, axis = 1)
+
+    
+    print(coord_data.shape)
+def scale(sample, width, height):
     # scales the data according to the img sixe  --> x/img_width, y/img_height
-    pass
+    sample = np.array(sample)
+    sample[:, 0] = sample[:, 0]/width
+    sample[:, 1] = sample[:, 1]/height
+
+    return sample
+
 
 def semantic_chunks(sample):
     # converts data into chunks of data with approx len of 300
@@ -57,6 +78,6 @@ def stack_data(sample):
     # stacks data in [x, y, pen, char, bow] 
     pass
 
-if __name__ =="main":
-    json_path = "./img_text_ext/tracing-webapp/backend/jsons"
+if __name__ =="__main__":
+    json_path = "./img_text_ext/tracing-webapp/backend/static/jsons"
     data = load_data(json_path)
